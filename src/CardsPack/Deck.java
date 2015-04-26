@@ -3,10 +3,10 @@ package CardsPack;
 import java.util.ArrayList;
 
 public class Deck {
-	ArrayList<Card> cards;
-	ArrayList<Card> usedCards;
+	public ArrayList<Card> cards;
+	public ArrayList<Card> usedCards;
 	
-	Deck() {
+	public Deck() {
 		cards = new ArrayList<Card>();
 		usedCards = new ArrayList<Card>();
 		cards.add(new Musician());
