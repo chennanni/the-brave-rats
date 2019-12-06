@@ -1,9 +1,6 @@
 package com.north.gamecore;
 import java.util.Scanner;
 
-import com.north.cardspack.Card;
-import com.north.cardspack.Deck;
-
 
 public class Board {
 	private Player p1;
@@ -19,19 +16,32 @@ public class Board {
 		deck = new Deck();
 	}
 	
-	public void startNewGame() {
-		createTwoPlayer();
-		
+	public void startNewGameOfPVE() {
+	    // create player
+        p1 = new Player("P1");
+        p2 = new AI();
+
+		// playing the game
 		while (!p1.isWinFlag() && !p2.isWinFlag() && (countRound < 8)) {
 			System.out.println("------NEW ROUND------");
 			countRound++;
-			cardOfP1 = chooseOneCard(p1);
-			cardOfP2 = chooseOneCardAI((AI)p2);
+			if (p1.isPlayLateHand()) {
+                cardOfP2 = chooseOneCardAI((AI)p2);
+                showCardPlayed(p2, cardOfP2);
+                cardOfP1 = chooseOneCard(p1);
+            } else if (p2.isPlayLateHand()) {
+                cardOfP1 = chooseOneCard(p1);
+                showCardPlayed(p1, cardOfP1);
+                cardOfP2 = chooseOneCardAI((AI)p2);
+            } else {
+                cardOfP1 = chooseOneCard(p1);
+                cardOfP2 = chooseOneCardAI((AI)p2);
+            }
 			judge();
-			//System.out.println("------END ROUND------");
 			printScoreBoard();
 		}
-		
+
+		// end game scenario
 		if (p1.isWinFlag()) {
 			endGame(p1);
 		} else if (p2.isWinFlag()) {
@@ -39,11 +49,6 @@ public class Board {
 		} else {
 			endGameTie();
 		}
-	}
-	
-	private void createTwoPlayer() {
-		p1 = new Player("P1");
-		p2 = new AI();
 	}
 	
 	private Card chooseOneCard(Player player) {
@@ -67,7 +72,7 @@ public class Board {
 		default: System.out.println("Input err, please choose from 0-7!"); return chooseOneCard(player);
 		}
 		if (player.haveThisCard(num)) {
-			System.out.println(player+" choosed "+num+"."+"\n");
+			//System.out.println(player+" choosed "+num+"."+"\n");
 			return playersCard;
 		}
 		else {
@@ -93,31 +98,27 @@ public class Board {
 		case 7 : playersCard = deck.getCards().get(7); break;
 		default: 
 		}
-		System.out.println(player+" choosed "+num+"."+"\n");
+		//System.out.println(player+" choosed "+num+"."+"\n");
 		return playersCard;
 	}
 	
 	private void judge() {
+	    // hint
 		System.out.println("******judging******");
-		System.out.println(p1.getName()+":"+cardOfP1.getNumber()+" <-> "+p2.getName()+":"+cardOfP2.getNumber());
-		if (cardOfP1.getNumber() > cardOfP2.getNumber()) {
-			p1.setScore(p1.getScore() + 1);
-			System.out.println(p1.getName()+" win this round!"+"\n");
-		} else if (cardOfP1.getNumber() < cardOfP2.getNumber()) {
-			p2.setScore(p2.getScore() + 1);
-			System.out.println(p2.getName()+" win this round!"+"\n");
-		} else {
-			System.out.println("Tie..."+"\n");
-		}
-		
-		if (p1.getScore() >=4) {
-			p1.setWinFlag(true);
-		} else if (p2.getScore() >=4) {
-			p2.setWinFlag(true);
-		}
-		//System.out.println("\n");
+		System.out.println(p1.getName() + ":" + cardOfP1.getNumber() + " " + cardOfP1.getName() +
+				" <-> " + p2.getName() + ":" + cardOfP2.getNumber() + " " + cardOfP2.getName());
+
+		// judge result
+		Result r = Rule.battle(p1, cardOfP1, p2, cardOfP2);
+
+		// execute result
+		r.executeResult(p1, p2);
 	}
-	
+
+	private void showCardPlayed(Player p, Card c) {
+        System.out.println(p + " choosed " + c.getNumber() + " " + c.getName() + "." + "\n");
+    }
+
 	private void printScoreBoard() {
 		System.out.println("<<<<<<SCORE BOARD>>>>>>");
 		System.out.println(p1.getName()+": "+p1.getScore());
