@@ -2,8 +2,6 @@ package com.north.gamecore;
 
 import java.util.Random;
 
-import com.north.cardspack.Deck;
-
 public class AI extends Player {
 
 	private Random random;

@@ -1,14 +1,17 @@
 package com.north.gamecore;
 import java.util.Iterator;
 
-import com.north.cardspack.Card;
-import com.north.cardspack.Deck;
-
 public class Player {
+	// hold cards
 	private Deck deck;
+	// basic info
 	private String name;
 	private int score;
 	private boolean winFlag;
+	// buff
+	private int strength;
+	private boolean playLateHand;
+	private boolean holdOneRound;
 
 	public Player() {}
 	
@@ -22,7 +25,7 @@ public class Player {
 	/**
 	 * 1. judge if player's deck has this card
 	 * 2. if true, remove this card from the deck
-	 * @param card number of the chosen card
+	 * @param cardNum number of the chosen card
 	 * @return true/false: if have this specific card
 	 */
 	public boolean haveThisCard(int cardNum) {
@@ -60,6 +63,22 @@ public class Player {
 		return this.getName();
 	}
 
+	public Deck getDeck() {
+		return deck;
+	}
+
+	public void setDeck(Deck deck) {
+		this.deck = deck;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public int getScore() {
 		return score;
 	}
@@ -76,20 +95,28 @@ public class Player {
 		this.winFlag = winFlag;
 	}
 
-	public String getName() {
-		return name;
+	public int getStrength() {
+		return strength;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setStrength(int strength) {
+		this.strength = strength;
 	}
 
-	public Deck getDeck() {
-		return deck;
+	public boolean isPlayLateHand() {
+		return playLateHand;
 	}
 
-	public void setDeck(Deck deck) {
-		this.deck = deck;
+	public void setPlayLateHand(boolean playLateHand) {
+		this.playLateHand = playLateHand;
+	}
+
+	public boolean isHoldOneRound() {
+		return holdOneRound;
+	}
+
+	public void setHoldOneRound(boolean holdOneRound) {
+		this.holdOneRound = holdOneRound;
 	}
 
 }
