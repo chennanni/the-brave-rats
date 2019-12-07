@@ -5,6 +5,7 @@ public class Result {
     public static String PLAYER_WIN_GAME = "playerWinGame";
     public static String PLAYER_ADD_ONE_SCORE = "playerAddOneScore";
     public static String PLAYER_ADD_TWO_SCORE = "playerAddTwoScore";
+    public static String PLAYER_ADD_THREE_SCORE = "playerAddThreeScore";
     public static String TIE = "tie";
     public static String HOLD = "hold";
 
@@ -12,6 +13,8 @@ public class Result {
     Player winner;
 
     public void executeResult(Player p1, Player p2) {
+        System.out.println('\n' + "******Result******");
+
         // add scores
         if (result == null) {
             unknownError();
@@ -21,6 +24,8 @@ public class Result {
             playerAddOneScore(winner);
         } else if (result.equalsIgnoreCase(PLAYER_ADD_TWO_SCORE)) {
             playerAddTwoScore(winner);
+        } else if (result.equalsIgnoreCase(PLAYER_ADD_THREE_SCORE)) {
+            playerAddThreeScore(winner);
         } else if (result.equalsIgnoreCase(TIE)) {
             tieRound();
         } else if (result.equalsIgnoreCase(HOLD)) {
@@ -44,24 +49,31 @@ public class Result {
 
     private void playerAddOneScore(Player p) {
         p.setScore(p.getScore()+1);
-        System.out.println(p.getName()+" win this round! Add 1 point."+"\n");
+        System.out.println(p.getName()+" win this round! Add 1 point.");
     }
 
     private void playerAddTwoScore(Player p) {
         p.setScore(p.getScore()+2);
-        System.out.println(p.getName()+" win this round! Add 2 point."+"\n");
+        System.out.println(p.getName()+" win this round! Add 2 point.");
+    }
+
+    private void playerAddThreeScore(Player p) {
+        p.setScore(p.getScore()+3);
+        System.out.println(p.getName()+" win this round! Add 3 point.");
     }
 
     private void tieRound() {
-        System.out.println("Tie..."+"\n");
+        System.out.println("Tie...");
     }
 
     private void holdRound() {
-        System.out.println("Hold..."+"\n");
+        System.out.println("Hold...");
     }
 
     private void playerWinGame(Player p) {
         p.setWinFlag(true);
+        p.setScore(p.getScore()+1);
+        System.out.println(p + " did a WIN Game play!");
     }
 
     private void unknownError() {

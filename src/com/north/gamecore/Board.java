@@ -65,7 +65,12 @@ public class Board {
 		System.out.println("Please choose one card, available cards: ");
 		player.printAllCards();
 		// get player's card number
-		int num = Integer.valueOf(in.nextLine());
+		int num;
+		try {
+			num = Integer.valueOf(in.nextLine());
+		} catch(Exception e) {
+			num = 99;
+		}
 		Card playersCard = null;
 		switch (num) {
 		case 0 : playersCard = deck.getCards().get(0); break;
@@ -105,16 +110,18 @@ public class Board {
 		case 7 : playersCard = deck.getCards().get(7); break;
 		default: 
 		}
-		//System.out.println(player+" choosed "+num+"."+"\n");
+		sleep(2);
 		return playersCard;
 	}
 	
 	private void judge() {
 	    // hint
-		System.out.println("******judging******");
+		System.out.println('\n'+"******judging******");
 		System.out.println(p1.getName() + ":" + cardOfP1.getNumber() + " " + cardOfP1.getName() + " | " + cardOfP1.getDescription()
 				+ '\n' + " <-> " + '\n'
 				+ p2.getName() + ":" + cardOfP2.getNumber() + " " + cardOfP2.getName()+ " | " + cardOfP2.getDescription());
+
+		sleep(2);
 
 		// judge result
 		Result r = Rule.battle(p1, cardOfP1, p2, cardOfP2);
@@ -123,15 +130,26 @@ public class Board {
 		r.executeResult(p1, p2);
 	}
 
+	private void sleep(int second) {
+		try {
+			for (int i=0; i<second; i++){
+				Thread.sleep(1000);
+				System.out.println("...");
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void showCardPlayed(Player p, Card c) {
         System.out.println(p + " choosed " + c.getNumber() + " " + c.getName() + "." + "\n");
     }
 
 	private void printScoreBoard() {
-		System.out.println("<<<<<<SCORE BOARD>>>>>>");
+		System.out.println('\n'+"<<<<<<SCORE BOARD>>>>>>");
 		System.out.println(p1.getName()+": "+p1.getScore());
 		System.out.println(p2.getName()+": "+p2.getScore());
-		System.out.println("<<<<<<<<<<<<>>>>>>>>>>>"+"\n"+"\n");
+		System.out.println("<<<<<<<<<<<<>>>>>>>>>>>"+"\n");
 	}
 	
 	private void endGame(Player player) {

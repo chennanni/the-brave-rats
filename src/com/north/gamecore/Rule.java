@@ -27,7 +27,7 @@ public class Rule {
         }
 
         // 7-5
-        if (c1.getNumber() == 7 && c2.getNumber() == 6) {
+        if (c1.getNumber() == 7 && c2.getNumber() == 5) {
             // 7 – Prince: You win the round.
             winThisRound(p1, r);
             clearBuff(p1, p2);
@@ -36,7 +36,7 @@ public class Rule {
         }
 
         // 7-4
-        if (c1.getNumber() == 7 && c2.getNumber() == 6) {
+        if (c1.getNumber() == 7 && c2.getNumber() == 4) {
             // 7 – Prince: You win the round.
             winThisRound(p1, r);
             clearBuff(p1, p2);
@@ -45,7 +45,7 @@ public class Rule {
         }
 
         // 7-3
-        if (c1.getNumber() == 7 && c2.getNumber() == 6) {
+        if (c1.getNumber() == 7 && c2.getNumber() == 3) {
             // 7 – Prince: You win the round.
             winThisRound(p1, r);
             clearBuff(p1, p2);
@@ -54,7 +54,7 @@ public class Rule {
         }
 
         // 7-2
-        if (c1.getNumber() == 7 && c2.getNumber() == 6) {
+        if (c1.getNumber() == 7 && c2.getNumber() == 2) {
             // 7 – Prince: You win the round.
             winThisRound(p1, r);
             clearBuff(p1, p2);
@@ -80,32 +80,31 @@ public class Rule {
         }
 
         // 6-5
-        if (c1.getNumber() == 7 && c2.getNumber() == 6) {
+        if (c1.getNumber() == 6 && c2.getNumber() == 5) {
             // 6 – General: The next card you play gets +2 strength.
             // 5 – Wizard: Nullify your opponent’s special ability.
             checkPoints(p1, c1, p2, c2, r);
         }
 
         // 6-4
-        if (c1.getNumber() == 7 && c2.getNumber() == 6) {
+        if (c1.getNumber() == 6 && c2.getNumber() == 4) {
             // 4 – Ambassador: If you win, it counts as 2 rounds.
-            p2.setHoldOneRound(true);
+            p2.setAddExtraPoint(true);
             checkPoints(p1, c1, p2, c2, r);
             // 6 – General: The next card you play gets +2 strength.
             p1.setStrength(2);
         }
 
         // 6-3
-        if (c1.getNumber() == 7 && c2.getNumber() == 6) {
+        if (c1.getNumber() == 6 && c2.getNumber() == 3) {
             // 3 – Assassin: The lower strength wins instead.
-            p2.setHoldOneRound(true);
             checkPoints(p1, c2, p2, c1, r);
             // 6 – General: The next card you play gets +2 strength.
             p1.setStrength(2);
         }
 
         // 6-2
-        if (c1.getNumber() == 7 && c2.getNumber() == 6) {
+        if (c1.getNumber() == 6 && c2.getNumber() == 2) {
             checkPoints(p1, c2, p2, c1, r);
             // 6 – General: The next card you play gets +2 strength.
             p1.setStrength(2);
@@ -114,7 +113,7 @@ public class Rule {
         }
 
         // 6-1
-        if (c1.getNumber() == 7 && c2.getNumber() == 6) {
+        if (c1.getNumber() == 6 && c2.getNumber() == 1) {
             checkPoints(p1, c2, p2, c1, r);
             // 6 – General: The next card you play gets +2 strength.
             p1.setStrength(2);
@@ -123,7 +122,7 @@ public class Rule {
         }
 
         // 6-0
-        if (c1.getNumber() == 7 && c2.getNumber() == 6) {
+        if (c1.getNumber() == 6 && c2.getNumber() == 0) {
             // 6 – General: The next card you play gets +2 strength.
             p1.setStrength(2);
             // 0 – Musician: This round is on hold.
@@ -168,7 +167,7 @@ public class Rule {
         // 4-3
         if (c1.getNumber() == 4 && c2.getNumber() == 3) {
             // 4 – Ambassador: If you win, it counts as 2 rounds.
-            p1.setHoldOneRound(true);
+            p1.setAddExtraPoint(true);
             // 3 – Assassin: The lower strength wins instead.
             checkPoints(p1, c2, p2, c1, r);
         }
@@ -176,7 +175,7 @@ public class Rule {
         // 4-2
         if (c1.getNumber() == 4 && c2.getNumber() == 2) {
             // 4 – Ambassador: If you win, it counts as 2 rounds.
-            p1.setHoldOneRound(true);
+            p1.setAddExtraPoint(true);
             checkPoints(p1, c1, p2, c2, r);
             // 2 – Spy: Next round, you choose a card after your opponent reveals theirs.
             p2.setPlayLateHand(true);
@@ -186,7 +185,7 @@ public class Rule {
         if (c1.getNumber() == 4 && c2.getNumber() == 1) {
             // 4 – Ambassador: If you win, it counts as 2 rounds.
             // 1 – Princess: If your opponent plays the Prince you win the whole game.
-            p1.setHoldOneRound(true);
+            p1.setAddExtraPoint(true);
             checkPoints(p1, c1, p2, c2, r);
         }
 
@@ -247,8 +246,8 @@ public class Rule {
 
     private static void checkPoints(Player p1, Card c1, Player p2, Card c2, Result r) {
         // hint
-        if (p1.getStrength() != 0) System.out.println(p1 + "gets +2 strength in this turn.");
-        if (p2.getStrength() != 0) System.out.println(p2 + "gets +2 strength in this turn.");
+        if (p1.getStrength() != 0) System.out.println(p1 + " gets +2 strength in this turn.");
+        if (p2.getStrength() != 0) System.out.println(p2 + " gets +2 strength in this turn.");
         // check points
         if (p1.getStrength() + c1.getNumber() > p2.getStrength() + c2.getNumber()) {
             // p1 win
@@ -264,20 +263,25 @@ public class Rule {
         clearBuff(p1, p2);
     }
 
+    // should not clear buff afterwards
     private static void holdThisRound(Player p1, Player p2, Result r) {
         r.result = Result.HOLD;
         p1.setHoldOneRound(true);
         p2.setHoldOneRound(true);
-        clearBuff(p1, p2);
     }
 
     // need to clear buff afterwards
     private static void winThisRound(Player p, Result r) {
         r.winner = p;
-        if (p.isHoldOneRound()) {
-            r.result = Result.PLAYER_ADD_TWO_SCORE;
-        } else {
+        int points = 1;
+        if (p.isHoldOneRound()) points++;
+        if (p.isAddExtraPoint()) points++;
+        if (points == 1) {
             r.result = Result.PLAYER_ADD_ONE_SCORE;
+        } else if (points == 2){
+            r.result = Result.PLAYER_ADD_TWO_SCORE;
+        } else if (points == 3) {
+            r.result = Result.PLAYER_ADD_THREE_SCORE;
         }
     }
 
@@ -288,13 +292,7 @@ public class Rule {
     }
 
     private static void clearBuff(Player p1, Player p2) {
-        // p1
-        p1.setStrength(0);
-        p1.setHoldOneRound(false);
-        p1.setPlayLateHand(false);
-        // p2
-        p2.setStrength(0);
-        p2.setHoldOneRound(false);
-        p2.setPlayLateHand(false);
+        p1.clearBuff();
+        p2.clearBuff();
     }
 }

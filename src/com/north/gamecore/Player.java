@@ -12,16 +12,26 @@ public class Player {
 	private int strength;
 	private boolean playLateHand;
 	private boolean holdOneRound;
+	private boolean addExtraPoint;
 
 	public Player() {}
 	
 	public Player(String name) {
 		setDeck(new Deck());
+		setName(name);
 		setScore(0);
 		setWinFlag(false);
-		this.setName(name);
+		setStrength(0);
+		clearBuff();
 	}
-	
+
+	public void clearBuff() {
+		setStrength(0);
+		setPlayLateHand(false);
+		setHoldOneRound(false);
+		setAddExtraPoint(false);
+	}
+
 	/**
 	 * 1. judge if player's deck has this card
 	 * 2. if true, remove this card from the deck
@@ -117,6 +127,14 @@ public class Player {
 
 	public void setHoldOneRound(boolean holdOneRound) {
 		this.holdOneRound = holdOneRound;
+	}
+
+	public boolean isAddExtraPoint() {
+		return addExtraPoint;
+	}
+
+	public void setAddExtraPoint(boolean addExtraPoint) {
+		this.addExtraPoint = addExtraPoint;
 	}
 
 }

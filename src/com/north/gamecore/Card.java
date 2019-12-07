@@ -8,7 +8,7 @@ public abstract class Card {
 	public abstract void magic();
 
 	public String toString() {
-		return "-"+number+" : "+name;
+		return "-"+number+" : "+name + " (" + description + ")";
 	}
 	
 	public int getNumber() {
