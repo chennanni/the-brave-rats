@@ -2,6 +2,12 @@ package com.north.gamecore;
 
 public class Rule {
     public static Result battle(Player p1, Card c1, Player p2, Card c2) {
+        Result r = Rule.battleOneSide(p1, c1, p2, c2);
+        if (!Result.isValidResult(r)) r = Rule.battleOneSide(p2, c2, p1, c1);
+        return r;
+    }
+
+    public static Result battleOneSide(Player p1, Card c1, Player p2, Card c2) {
         if (p1 == null || p2 == null || c1 == null || c2 == null) return null;
         Result r = new Result();
 
@@ -124,6 +130,118 @@ public class Rule {
             holdThisRound(p1, p2, r);
         }
 
+        // 5-4
+        if (c1.getNumber() == 5 && c2.getNumber() == 4) {
+            // 5 – Wizard: Nullify your opponent’s special ability.
+            // 4 – Ambassador: If you win, it counts as 2 rounds.
+            checkPoints(p1, c1, p2, c2, r);
+        }
+
+        // 5-3
+        if (c1.getNumber() == 5 && c2.getNumber() == 3) {
+            // 5 – Wizard: Nullify your opponent’s special ability.
+            // 3 – Assassin: The lower strength wins instead.
+            checkPoints(p1, c1, p2, c2, r);
+        }
+
+        // 5-2
+        if (c1.getNumber() == 5 && c2.getNumber() == 2) {
+            // 5 – Wizard: Nullify your opponent’s special ability.
+            // 2 – Spy: Next round, you choose a card after your opponent reveals theirs.
+            checkPoints(p1, c1, p2, c2, r);
+        }
+
+        // 5-1
+        if (c1.getNumber() == 5 && c2.getNumber() == 1) {
+            // 5 – Wizard: Nullify your opponent’s special ability.
+            // 1 – Princess: If your opponent plays the Prince you win the whole game.
+            checkPoints(p1, c1, p2, c2, r);
+        }
+
+        // 5-0
+        if (c1.getNumber() == 5 && c2.getNumber() == 0) {
+            // 5 – Wizard: Nullify your opponent’s special ability.
+            // 0 – Musician: This round is on hold.
+            checkPoints(p1, c1, p2, c2, r);
+        }
+
+        // 4-3
+        if (c1.getNumber() == 4 && c2.getNumber() == 3) {
+            // 4 – Ambassador: If you win, it counts as 2 rounds.
+            p1.setHoldOneRound(true);
+            // 3 – Assassin: The lower strength wins instead.
+            checkPoints(p1, c2, p2, c1, r);
+        }
+
+        // 4-2
+        if (c1.getNumber() == 4 && c2.getNumber() == 2) {
+            // 4 – Ambassador: If you win, it counts as 2 rounds.
+            p1.setHoldOneRound(true);
+            checkPoints(p1, c1, p2, c2, r);
+            // 2 – Spy: Next round, you choose a card after your opponent reveals theirs.
+            p2.setPlayLateHand(true);
+        }
+
+        // 4-1
+        if (c1.getNumber() == 4 && c2.getNumber() == 1) {
+            // 4 – Ambassador: If you win, it counts as 2 rounds.
+            // 1 – Princess: If your opponent plays the Prince you win the whole game.
+            p1.setHoldOneRound(true);
+            checkPoints(p1, c1, p2, c2, r);
+        }
+
+        // 4-0
+        if (c1.getNumber() == 4 && c2.getNumber() == 0) {
+            // 4 – Ambassador: If you win, it counts as 2 rounds.
+            // 0 – Musician: This round is on hold.
+            holdThisRound(p1, p2, r);
+        }
+
+        // 3-2
+        if (c1.getNumber() == 3 && c2.getNumber() == 2) {
+            // 3 – Assassin: The lower strength wins instead.
+            checkPoints(p1, c2, p2, c1, r);
+            // 2 – Spy: Next round, you choose a card after your opponent reveals theirs.
+            p2.setPlayLateHand(true);
+        }
+
+        // 3-1
+        if (c1.getNumber() == 3 && c2.getNumber() == 1) {
+            // 3 – Assassin: The lower strength wins instead.
+            // 1 – Princess: If your opponent plays the Prince you win the whole game.
+            checkPoints(p1, c2, p2, c1, r);
+        }
+
+        // 3-0
+        if (c1.getNumber() == 3 && c2.getNumber() == 0) {
+            // 3 – Assassin: The lower strength wins instead.
+            // 0 – Musician: This round is on hold.
+            holdThisRound(p1, p2, r);
+        }
+
+        // 2-1
+        if (c1.getNumber() == 2 && c2.getNumber() == 1) {
+            // 2 – Spy: Next round, you choose a card after your opponent reveals theirs.
+            // 1 – Princess: If your opponent plays the Prince you win the whole game.
+            checkPoints(p1, c1, p2, c2, r);
+            p1.setPlayLateHand(true);
+        }
+
+        // 2-0
+        if (c1.getNumber() == 2 && c2.getNumber() == 0) {
+            // 0 – Musician: This round is on hold.
+            holdThisRound(p1, p2, r);
+            // 2 – Spy: Next round, you choose a card after your opponent reveals theirs.
+            p1.setPlayLateHand(true);
+        }
+
+        // 1-0
+        if (c1.getNumber() == 1 && c2.getNumber() == 0) {
+            // 1 – Princess: If your opponent plays the Prince you win the whole game.
+            // 0 – Musician: This round is on hold.
+            holdThisRound(p1, p2, r);
+        }
+
         return r;
     }
 
@@ -146,6 +264,14 @@ public class Rule {
         clearBuff(p1, p2);
     }
 
+    private static void holdThisRound(Player p1, Player p2, Result r) {
+        r.result = Result.HOLD;
+        p1.setHoldOneRound(true);
+        p2.setHoldOneRound(true);
+        clearBuff(p1, p2);
+    }
+
+    // need to clear buff afterwards
     private static void winThisRound(Player p, Result r) {
         r.winner = p;
         if (p.isHoldOneRound()) {
@@ -155,25 +281,20 @@ public class Rule {
         }
     }
 
+    // need to clear buff afterwards
     private static void winThisGame(Player p, Result r) {
         r.winner = p;
         r.result = Result.PLAYER_WIN_GAME;
-    }
-
-    private static void holdThisRound(Player p1, Player p2, Result r) {
-        r.result = Result.HOLD;
-        p1.setHoldOneRound(true);
-        p2.setHoldOneRound(true);
     }
 
     private static void clearBuff(Player p1, Player p2) {
         // p1
         p1.setStrength(0);
         p1.setHoldOneRound(false);
-        p1.setHoldOneRound(false);
+        p1.setPlayLateHand(false);
         // p2
         p2.setStrength(0);
         p2.setHoldOneRound(false);
-        p2.setHoldOneRound(false);
+        p2.setPlayLateHand(false);
     }
 }

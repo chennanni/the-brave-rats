@@ -37,6 +37,11 @@ public class Result {
         }
     }
 
+    public static boolean isValidResult(Result r) {
+        if (r == null || r.result == null) return false;
+        return true;
+    }
+
     private void playerAddOneScore(Player p) {
         p.setScore(p.getScore()+1);
         System.out.println(p.getName()+" win this round! Add 1 point."+"\n");
@@ -61,6 +66,7 @@ public class Result {
 
     private void unknownError() {
         System.out.println("Error, please restart the game or contact admin."+"\n");
+        System.exit(-1);
     }
 
 }

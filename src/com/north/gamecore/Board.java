@@ -23,7 +23,7 @@ public class Board {
 
 		// playing the game
 		while (!p1.isWinFlag() && !p2.isWinFlag() && (countRound < 8)) {
-			System.out.println("------NEW ROUND------");
+			startNewRound();
 			countRound++;
 			if (p1.isPlayLateHand()) {
                 cardOfP2 = chooseOneCardAI((AI)p2);
@@ -50,7 +50,14 @@ public class Board {
 			endGameTie();
 		}
 	}
-	
+
+	private void startNewRound() {
+		System.out.println("Press any key to start a new round...");
+		// get player's card number
+		in.nextLine();
+		System.out.println("------NEW ROUND------");
+	}
+
 	private Card chooseOneCard(Player player) {
 		// player chooses one card, put on the table
 		//player.printUsedCards();
@@ -105,8 +112,9 @@ public class Board {
 	private void judge() {
 	    // hint
 		System.out.println("******judging******");
-		System.out.println(p1.getName() + ":" + cardOfP1.getNumber() + " " + cardOfP1.getName() +
-				" <-> " + p2.getName() + ":" + cardOfP2.getNumber() + " " + cardOfP2.getName());
+		System.out.println(p1.getName() + ":" + cardOfP1.getNumber() + " " + cardOfP1.getName() + " | " + cardOfP1.getDescription()
+				+ '\n' + " <-> " + '\n'
+				+ p2.getName() + ":" + cardOfP2.getNumber() + " " + cardOfP2.getName()+ " | " + cardOfP2.getDescription());
 
 		// judge result
 		Result r = Rule.battle(p1, cardOfP1, p2, cardOfP2);
