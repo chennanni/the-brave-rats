@@ -1,9 +1,13 @@
 # TheBraveRats
 The game is not completed. What I finished now is a very very rough cmd version of the real game.
 
+Version
+- 1.0(beta): implement the basic card battle framework.
+- 2.0(20191207): add magic function.
+
 TODO List:
-<li>Cards' magic function is not implemented.</li>
-<li>Create a better AI.</li>
+- add check opponent's card option
+- create a better AI
 
 # Game Idea
 "
