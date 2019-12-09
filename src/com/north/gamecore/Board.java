@@ -1,4 +1,5 @@
 package com.north.gamecore;
+import java.io.IOException;
 import java.util.Scanner;
 
 
@@ -9,7 +10,7 @@ public class Board {
 	private Card cardOfP2;
 	private Deck deck;
 	private int countRound;
-	private Scanner in = new Scanner(System.in);
+	private Scanner screen = new Scanner(System.in);
 	
 	public Board() {
 		countRound = 0;
@@ -23,38 +24,43 @@ public class Board {
 
 		// playing the game
 		while (!p1.isWinFlag() && !p2.isWinFlag() && (countRound < 8)) {
+		    UserInterface.showOption(p1);
+            screen.nextLine();
+
 			startNewRound();
 			countRound++;
 			if (p1.isPlayLateHand()) {
                 cardOfP2 = chooseOneCardAI((AI)p2);
-                showCardPlayed(p2, cardOfP2);
+                UserInterface.showCardPlayed(p2, cardOfP2);
                 cardOfP1 = chooseOneCard(p1);
             } else if (p2.isPlayLateHand()) {
                 cardOfP1 = chooseOneCard(p1);
-                showCardPlayed(p1, cardOfP1);
+				UserInterface.showCardPlayed(p1, cardOfP1);
                 cardOfP2 = chooseOneCardAI((AI)p2);
             } else {
                 cardOfP1 = chooseOneCard(p1);
                 cardOfP2 = chooseOneCardAI((AI)p2);
             }
 			judge();
-			printScoreBoard();
+			UserInterface.printScoreBoard(p1, p2);
 		}
 
 		// end game scenario
 		if (p1.isWinFlag()) {
-			endGame(p1);
+			UserInterface.endGame(p1);
 		} else if (p2.isWinFlag()) {
-			endGame(p2);
+			UserInterface.endGame(p2);
 		} else {
-			endGameTie();
+			UserInterface.endGameTie();
 		}
 	}
 
 	private void startNewRound() {
 		System.out.println("Press any key to start a new round...");
-		// get player's card number
-		in.nextLine();
+		// clear console
+        UserInterface.clearConsole1();
+        // get player's card number
+        screen.nextLine();
 		System.out.println("------NEW ROUND------");
 	}
 
@@ -65,12 +71,7 @@ public class Board {
 		System.out.println("Please choose one card, available cards: ");
 		player.printAllCards();
 		// get player's card number
-		int num;
-		try {
-			num = Integer.valueOf(in.nextLine());
-		} catch(Exception e) {
-			num = 99;
-		}
+		int num = Utils.parseInput(screen.next());
 		Card playersCard = null;
 		switch (num) {
 		case 0 : playersCard = deck.getCards().get(0); break;
@@ -110,7 +111,7 @@ public class Board {
 		case 7 : playersCard = deck.getCards().get(7); break;
 		default: 
 		}
-		sleep(2);
+		Utils.sleep(2);
 		return playersCard;
 	}
 	
@@ -121,7 +122,7 @@ public class Board {
 				+ '\n' + " <-> " + '\n'
 				+ p2.getName() + ":" + cardOfP2.getNumber() + " " + cardOfP2.getName()+ " | " + cardOfP2.getDescription());
 
-		sleep(2);
+        Utils.sleep(2);
 
 		// judge result
 		Result r = Rule.battle(p1, cardOfP1, p2, cardOfP2);
@@ -130,32 +131,4 @@ public class Board {
 		r.executeResult(p1, p2);
 	}
 
-	private void sleep(int second) {
-		try {
-			for (int i=0; i<second; i++){
-				Thread.sleep(1000);
-				System.out.println("...");
-			}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void showCardPlayed(Player p, Card c) {
-        System.out.println(p + " choosed " + c.getNumber() + " " + c.getName() + "." + "\n");
-    }
-
-	private void printScoreBoard() {
-		System.out.println('\n'+"<<<<<<SCORE BOARD>>>>>>");
-		System.out.println(p1.getName()+": "+p1.getScore());
-		System.out.println(p2.getName()+": "+p2.getScore());
-		System.out.println("<<<<<<<<<<<<>>>>>>>>>>>"+"\n");
-	}
-	
-	private void endGame(Player player) {
-		System.out.println(player+" win!");
-	}
-	private void endGameTie() {
-		System.out.println("Tie this game!");
-	}
 }
