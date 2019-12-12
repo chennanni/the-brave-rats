@@ -13,7 +13,7 @@ public class Result {
     Player winner;
 
     public void executeResult(Player p1, Player p2) {
-        System.out.println('\n' + "******Result******");
+        UserInterface.println('\n' + "------Result------");
 
         // add scores
         if (result == null) {
@@ -49,35 +49,35 @@ public class Result {
 
     private void playerAddOneScore(Player p) {
         p.setScore(p.getScore()+1);
-        System.out.println(p.getName()+" win this round! Add 1 point.");
+        UserInterface.println(p.getName()+" win this round! Add 1 point.");
     }
 
     private void playerAddTwoScore(Player p) {
         p.setScore(p.getScore()+2);
-        System.out.println(p.getName()+" win this round! Add 2 point.");
+        UserInterface.println(p.getName()+" win this round! Add 2 point.");
     }
 
     private void playerAddThreeScore(Player p) {
         p.setScore(p.getScore()+3);
-        System.out.println(p.getName()+" win this round! Add 3 point.");
+        UserInterface.println(p.getName()+" win this round! Add 3 point.");
     }
 
     private void tieRound() {
-        System.out.println("Tie...");
+        UserInterface.println("Tie...");
     }
 
     private void holdRound() {
-        System.out.println("Hold...");
+        UserInterface.println("Hold...");
     }
 
     private void playerWinGame(Player p) {
         p.setWinFlag(true);
         p.setScore(p.getScore()+1);
-        System.out.println(p + " did a WIN Game play!");
+        UserInterface.println(p + " did a WIN Game play!");
     }
 
     private void unknownError() {
-        System.out.println("Error, please restart the game or contact admin."+"\n");
+        UserInterface.println("Error, please restart the game or contact admin."+"\n");
         System.exit(-1);
     }
 
