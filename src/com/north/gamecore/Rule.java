@@ -2,6 +2,10 @@ package com.north.gamecore;
 
 public class Rule {
     public static Result battle(Player p1, Card c1, Player p2, Card c2) {
+        // print buff
+        UserInterface.printBuff(p1);
+        UserInterface.printBuff(p2);
+        // start battle
         Result r = Rule.battleOneSide(p1, c1, p2, c2);
         if (!Result.isValidResult(r)) r = Rule.battleOneSide(p2, c2, p1, c1);
         return r;
@@ -105,7 +109,7 @@ public class Rule {
 
         // 6-2
         if (c1.getNumber() == 6 && c2.getNumber() == 2) {
-            checkPoints(p1, c2, p2, c1, r);
+            checkPoints(p1, c1, p2, c2, r);
             // 6 – General: The next card you play gets +2 strength.
             p1.setStrength(2);
             // 2 – Spy: Next round, you choose a card after your opponent reveals theirs.
@@ -114,7 +118,7 @@ public class Rule {
 
         // 6-1
         if (c1.getNumber() == 6 && c2.getNumber() == 1) {
-            checkPoints(p1, c2, p2, c1, r);
+            checkPoints(p1, c1, p2, c2, r);
             // 6 – General: The next card you play gets +2 strength.
             p1.setStrength(2);
             // 1 – Princess: If your opponent plays the Prince you win the whole game.
@@ -245,9 +249,6 @@ public class Rule {
     }
 
     private static void checkPoints(Player p1, Card c1, Player p2, Card c2, Result r) {
-        // hint
-        if (p1.getStrength() != 0) System.out.println(p1 + " gets +2 strength in this turn.");
-        if (p2.getStrength() != 0) System.out.println(p2 + " gets +2 strength in this turn.");
         // check points
         if (p1.getStrength() + c1.getNumber() > p2.getStrength() + c2.getNumber()) {
             // p1 win
