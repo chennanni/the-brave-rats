@@ -1,131 +1,169 @@
 package com.north.gamecore;
-import java.io.IOException;
+
 import java.util.Scanner;
 
-
 public class Board {
-	private Player p1;
-	private Player p2;
-	private Card cardOfP1;
-	private Card cardOfP2;
-	private Deck deck;
-	private int countRound;
-	private Scanner screen = new Scanner(System.in);
-	
+
+    // auto initiation fields
+    private int countRound;
+	private Deck commonDeck;
+	private StringBuilder battleHistory;
+    private Scanner screen;
+
+    // manually initiation fields
+    private Player p1;
+    private Player p2;
+
 	public Board() {
 		countRound = 0;
-		deck = new Deck();
+        commonDeck = new Deck();
+        battleHistory = new StringBuilder();
+        screen = new Scanner(System.in);
 	}
-	
-	public void startNewGameOfPVE() {
-	    // create player
+
+    public void startNewGameOfPVP(String P1, String P2) {
+        p1 = new Player(P1);
+        p2 = new Player(P2);
+        startNewGame();
+    }
+
+    public void startNewGameOfPVP() {
         p1 = new Player("P1");
-        p2 = new AI();
+        p2 = new Player("P2");
+        startNewGame();
+    }
 
-		// playing the game
-		while (!p1.isWinFlag() && !p2.isWinFlag() && (countRound < 8)) {
-		    UserInterface.showOption(p1);
-            screen.nextLine();
-
-			startNewRound();
-			countRound++;
-			if (p1.isPlayLateHand()) {
-                cardOfP2 = chooseOneCardAI((AI)p2);
-                UserInterface.showCardPlayed(p2, cardOfP2);
-                cardOfP1 = chooseOneCard(p1);
-            } else if (p2.isPlayLateHand()) {
-                cardOfP1 = chooseOneCard(p1);
-				UserInterface.showCardPlayed(p1, cardOfP1);
-                cardOfP2 = chooseOneCardAI((AI)p2);
-            } else {
-                cardOfP1 = chooseOneCard(p1);
-                cardOfP2 = chooseOneCardAI((AI)p2);
-            }
-			judge();
-			UserInterface.printScoreBoard(p1, p2);
-		}
-
-		// end game scenario
-		if (p1.isWinFlag()) {
-			UserInterface.endGame(p1);
-		} else if (p2.isWinFlag()) {
-			UserInterface.endGame(p2);
-		} else {
-			UserInterface.endGameTie();
-		}
+	public void startNewGameOfPVE() {
+        p1 = new Player("P1");
+        p2 = new AI("AI");
+        startNewGame();
 	}
+
+    public void startNewGame() {
+	    // set opponents
+        p1.setOpponent(p2);
+        p2.setOpponent(p1);
+
+        // playing the game
+        while (!p1.isWinFlag() && !p2.isWinFlag() && (countRound < 8)) {
+            // Start New Round
+            startNewRound();
+            countRound++;
+            // Menu Selection
+            if (p1.isPlayLateHand()) {
+                choose(p2);
+                UserInterface.printCardPlayed(p2);
+                p2.getDeck().exposeThisCard(p2.getCard());
+                choose(p1);
+            } else if (p2.isPlayLateHand()) {
+                choose(p1);
+                UserInterface.printCardPlayed(p1);
+                p1.getDeck().exposeThisCard(p1.getCard());
+                choose(p2);
+            } else {
+                choose(p1);
+                choose(p2);
+            }
+            judge();
+            UserInterface.printScoreBoard(p1, p2);
+        }
+
+        // end game scenario
+        if (p1.isWinFlag()) {
+            UserInterface.endGame(p1);
+        } else if (p2.isWinFlag()) {
+            UserInterface.endGame(p2);
+        } else {
+            UserInterface.endGameTie();
+        }
+    }
 
 	private void startNewRound() {
-		System.out.println("Press any key to start a new round...");
-		// clear console
-        UserInterface.clearConsole1();
-        // get player's card number
-        screen.nextLine();
+		System.out.println("Press A to start a new round...");
+        screen.next();
+        UserInterface.clearConsole();
 		System.out.println("------NEW ROUND------");
 	}
 
-	private Card chooseOneCard(Player player) {
+    private void choose(Player player) {
+        chooseOption(player);
+        chooseOneCard(player);
+        UserInterface.clearConsole();
+    }
+
+	private void chooseOption(Player player) {
+	    // AI will skip option selection
+	    if (player instanceof AI) {
+	        return;
+        }
+        // Display Option Menu
+        boolean showOptionMenu = true;
+        while (showOptionMenu) {
+            UserInterface.printOption(player);
+            int num = Utils.parseInput(screen.next());
+            showOptionMenu = Utils.parseOptionSelection(num, player, battleHistory.toString());
+        }
+    }
+
+	private void chooseOneCard(Player player) {
+	    if (player instanceof AI) {
+	        chooseOneCardAI((AI) player);
+        } else {
+	        chooseOneCardHuman(player);
+        }
+    }
+
+	private void chooseOneCardHuman(Player player) {
 		// player chooses one card, put on the table
-		//player.printUsedCards();
+        UserInterface.clearConsole();
 		System.out.println(player.getName()+"'s turn");
 		System.out.println("Please choose one card, available cards: ");
 		player.printAllCards();
 		// get player's card number
 		int num = Utils.parseInput(screen.next());
-		Card playersCard = null;
-		switch (num) {
-		case 0 : playersCard = deck.getCards().get(0); break;
-		case 1 : playersCard = deck.getCards().get(1); break;
-		case 2 : playersCard = deck.getCards().get(2); break;
-		case 3 : playersCard = deck.getCards().get(3); break;
-		case 4 : playersCard = deck.getCards().get(4); break;
-		case 5 : playersCard = deck.getCards().get(5); break;
-		case 6 : playersCard = deck.getCards().get(6); break;
-		case 7 : playersCard = deck.getCards().get(7); break;
-		default: System.out.println("Input err, please choose from 0-7!"); return chooseOneCard(player);
-		}
-		if (player.haveThisCard(num)) {
-			//System.out.println(player+" choosed "+num+"."+"\n");
-			return playersCard;
-		}
-		else {
-			System.out.println("Input err, please choose a NOT USED card!");
-			return chooseOneCard(player);
-		}
+		Card card = Utils.parseCardSelection(num, player, commonDeck);
+		// get the card
+		if (card == null) {
+		    chooseOneCardHuman(player);
+        } else {
+		    player.setCard(card);
+        }
 	}
 	
-	private Card chooseOneCardAI(AI player) {
-		//player.printUsedCards();
+	private void chooseOneCardAI(AI player) {
+        UserInterface.clearConsole();
 		System.out.println(player.getName()+"'s turn");
 		System.out.println(player.getName()+" is choosing cards...");
 		int num = player.randomlyPlay();
-		Card playersCard = null;
-		switch (num) {
-		case 0 : playersCard = deck.getCards().get(0); break;
-		case 1 : playersCard = deck.getCards().get(1); break;
-		case 2 : playersCard = deck.getCards().get(2); break;
-		case 3 : playersCard = deck.getCards().get(3); break;
-		case 4 : playersCard = deck.getCards().get(4); break;
-		case 5 : playersCard = deck.getCards().get(5); break;
-		case 6 : playersCard = deck.getCards().get(6); break;
-		case 7 : playersCard = deck.getCards().get(7); break;
-		default: 
-		}
-		Utils.sleep(2);
-		return playersCard;
+        Card card = Utils.parseCardSelection(num, player, commonDeck);
+        // sleep some time
+        Utils.sleep(2);
+        if (card == null) {
+            chooseOneCardAI(player);
+        } else {
+            player.setCard(card);
+        }
 	}
 	
 	private void judge() {
-	    // hint
-		System.out.println('\n'+"******judging******");
-		System.out.println(p1.getName() + ":" + cardOfP1.getNumber() + " " + cardOfP1.getName() + " | " + cardOfP1.getDescription()
-				+ '\n' + " <-> " + '\n'
-				+ p2.getName() + ":" + cardOfP2.getNumber() + " " + cardOfP2.getName()+ " | " + cardOfP2.getDescription());
+	    String details = p1.getName() + ":" + p1.getCard().getNumber() + " " + p1.getCard().getName() + " | " + p1.getCard().getDescription()
+                + '\n' + " <-> " + '\n'
+                + p2.getName() + ":" + p2.getCard().getNumber() + " " + p2.getCard().getName()+ " | " + p2.getCard().getDescription();
+	    battleHistory.append('\n'+"Round "+countRound+'\n'+details+'\n');
+
+	    // details
+        UserInterface.clearConsole();
+        System.out.println('\n'+"------judging------");
+		System.out.println(details);
 
         Utils.sleep(2);
 
+        // expose card
+        p1.getDeck().exposeThisCard(p1.getCard());
+        p2.getDeck().exposeThisCard(p2.getCard());
+
 		// judge result
-		Result r = Rule.battle(p1, cardOfP1, p2, cardOfP2);
+		Result r = Rule.battle(p1, p1.getCard(), p2, p2.getCard());
 
 		// execute result
 		r.executeResult(p1, p2);
