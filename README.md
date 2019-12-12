@@ -4,9 +4,9 @@ The game is not completed. What I finished now is a very very rough cmd version 
 Version
 - 1.0(beta): implement the basic card battle framework.
 - 2.0(20191207): add magic function.
+- 3.0(20191212): add PVP function, improve UI.
 
 TODO List:
-- add check opponent's card option
 - create a better AI
 
 # Game Idea
@@ -34,3 +34,16 @@ The game lasts until one player wins four rounds, or both players are out of car
 Source: http://geekdad.com/2014/06/braverats/
 
 This game is designed by <i>Seiji Kanai</i>
+
+# Run Instruction
+
+- Install Java and set Path (if it's not already in place)
+  - example: `set PATH=C:\Program Files\Java\jdk1.8.0_161\bin`
+  - example: `set JAVA_HOME=C:\Program Files\Java\jdk1.8.0_161`
+- Open cmd window, cd to project directory
+  - example: `cd .\the-brave-rats-master`
+- Build
+  - example: `javac -d output\production\the-brave-rats-master src\com\north\application\*.java src\com\north\cardspack\*.java src\com\north\gamecore\*.java`
+- Run
+  - example: cd to output directory, `cd output\production\the-brave-rats-master`
+  - example: `java -cp . com.north.application.PVP`
