@@ -2,8 +2,12 @@ package com.north.gamecore;
 import java.util.Iterator;
 
 public class Player {
+    // Opponent
+    private Player opponent;
 	// hold cards
 	private Deck deck;
+    // card choosen
+    private Card card;
 	// basic info
 	private String name;
 	private int score;
@@ -14,14 +18,11 @@ public class Player {
 	private boolean holdOneRound;
 	private boolean addExtraPoint;
 
-	public Player() {}
-	
 	public Player(String name) {
 		setDeck(new Deck());
 		setName(name);
 		setScore(0);
 		setWinFlag(false);
-		setStrength(0);
 		clearBuff();
 	}
 
@@ -47,31 +48,78 @@ public class Player {
 		}
 		return false;
 	}
-	
+
+    /**
+     * show all cards available, similar to printNotUsedCards
+     */
 	public void printAllCards() {
 		Iterator<Card> ite = getDeck().getCards().iterator();
 		while (ite.hasNext()) {
-			System.out.println(ite.next());
+            UserInterface.println(ite.next().toString());
 		}
-		System.out.print("Choose Wisely!"+'\n');
+		UserInterface.print("Choose Wisely!"+'\n');
 	}
-	
+
+    /**
+     * show all cards played
+     */
 	public void printUsedCards() {
-		System.out.println("~ "+getName()+"'s Used Cards:");
+        UserInterface.clearConsole();
+		UserInterface.println("\n"+"------"+getName()+"'s Used Cards------");
 		Iterator<Card> ite = getDeck().getUsedCards().iterator();
 		if (ite.hasNext()){
 			while (ite.hasNext()) {
-				System.out.println("~ "+ite.next());
+                UserInterface.println("~ "+ite.next().toString());
 			}
 		} else {
-			System.out.println("~ No cards have been used!");
+            UserInterface.println("~ No cards have been used!");
 		}
-
+        UserInterface.println("------------------"+"\n");
 	}
-	
+
+    /**
+     * show all cards not played
+     */
+	public void printNotUsedCards() {
+        UserInterface.clearConsole();
+        UserInterface.println("\n"+"------"+getName()+"'s Not Used Cards------");
+		Iterator<Card> ite = getDeck().getCards().iterator();
+		if (ite.hasNext()){
+			while (ite.hasNext()) {
+                UserInterface.println("~ "+ite.next().toString());
+			}
+		}
+        UserInterface.println("------------------"+"\n");
+	}
+
+    /**
+     * show all exposed cards
+     */
+    public void printExposedCards() {
+        UserInterface.clearConsole();
+        UserInterface.println("\n"+"------"+getName()+"'s Exposed Cards------");
+        Iterator<Card> ite = getDeck().getExposedCards().iterator();
+        if (ite.hasNext()){
+            while (ite.hasNext()) {
+                UserInterface.println("~ "+ite.next().toString());
+            }
+        } else {
+            UserInterface.println("~ No cards have been played!");
+        }
+        UserInterface.println("------------------"+"\n");
+    }
+
 	public String toString() {
 		return this.getName();
 	}
+
+    public Player getOpponent() {
+        return opponent;
+    }
+
+    public void setOpponent(Player opponent) {
+        this.opponent = opponent;
+    }
 
 	public Deck getDeck() {
 		return deck;
@@ -80,6 +128,14 @@ public class Player {
 	public void setDeck(Deck deck) {
 		this.deck = deck;
 	}
+
+    public Card getCard() {
+        return card;
+    }
+
+    public void setCard(Card card) {
+        this.card = card;
+    }
 
 	public String getName() {
 		return name;
